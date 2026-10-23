@@ -26,6 +26,12 @@ server/config/vapid.json
 dist/
 build/
 client/dist/
+dist-apk/
+client/android/app/build/
+client/android/build/
+client/android/.gradle/
+client/android/local.properties
+supabase/.temp/
 
 # Logs
 npm-debug.log*

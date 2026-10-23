@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Zenv Digital</string>
+    <string name="title_activity_main">Zenv Digital</string>
+    <string name="package_name">com.zenvdigital.app</string>
+    <string name="custom_url_scheme">com.zenvdigital.app</string>
+</resources>
