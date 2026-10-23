@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   Lock, Mail, Eye, EyeOff, ShieldAlert, ArrowRight, AlertTriangle,
-  CheckCircle, UserCheck
+  CheckCircle, UserCheck, Globe, Settings2
 } from 'lucide-react';
 
 export const Login = () => {
@@ -21,6 +21,19 @@ export const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [lockoutInfo, setLockoutInfo] = useState(null);
+
+  // Mobile / Network Server URL Configuration
+  const [showServerConfig, setShowServerConfig] = useState(false);
+  const [serverUrlInput, setServerUrlInput] = useState(() => localStorage.getItem('zenv_api_host') || 'http://192.168.29.140:5000');
+  const [serverSavedMsg, setServerSavedMsg] = useState('');
+
+  const handleSaveServerUrl = (e) => {
+    e.preventDefault();
+    const cleanUrl = serverUrlInput.trim().replace(/\/+$/, '');
+    localStorage.setItem('zenv_api_host', cleanUrl);
+    setServerSavedMsg('Server endpoint saved. Retrying will connect to: ' + cleanUrl);
+    setTimeout(() => setServerSavedMsg(''), 4000);
+  };
 
   // Handle Login
   const handleLoginSubmit = async (e) => {
@@ -127,9 +140,50 @@ export const Login = () => {
 
             {/* Standard Error Notice */}
             {errorMessage && !lockoutInfo && (
-              <div className="mb-6 p-3.5 rounded-xl bg-[#FEF9EE] border border-[#F0D59D] text-[#8C5D1E] text-xs flex items-start gap-2.5">
-                <AlertTriangle className="w-4 h-4 text-[#A6732B] shrink-0 mt-0.5" />
-                <span>{errorMessage}</span>
+              <div className="mb-6 p-3.5 rounded-xl bg-[#FEF9EE] border border-[#F0D59D] text-[#8C5D1E] text-xs space-y-2">
+                <div className="flex items-start gap-2.5">
+                  <AlertTriangle className="w-4 h-4 text-[#A6732B] shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">{errorMessage}</span>
+                </div>
+                <div className="pt-2 border-t border-[#F0D59D]/60 flex items-center justify-between">
+                  <span className="text-[11px] text-[#7A5016]">Need to change target server IP?</span>
+                  <button 
+                    type="button" 
+                    onClick={() => setShowServerConfig(!showServerConfig)}
+                    className="font-bold underline text-[#7A5016] hover:text-[#52330A] text-[11px]"
+                  >
+                    {showServerConfig ? 'Close' : 'Set Endpoint'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {showServerConfig && (
+              <div className="mb-6 p-3.5 rounded-xl bg-white/95 border border-[#DDD5E8] shadow-xs text-xs space-y-2">
+                <div className="flex items-center gap-1.5 font-bold text-[#2A2335]">
+                  <Globe className="w-3.5 h-3.5 text-[#5B4380]" />
+                  <span>API Server Endpoint</span>
+                </div>
+                <p className="text-[11px] text-[#554F5E]">
+                  Backend server address (e.g. Wi-Fi IP <code className="font-mono bg-[#EFEAF6] px-1 rounded">http://192.168.29.140:5000</code> or your cloud domain):
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={serverUrlInput}
+                    onChange={(e) => setServerUrlInput(e.target.value)}
+                    placeholder="http://192.168.29.140:5000"
+                    className="flex-1 px-3 py-1.5 rounded-lg border border-[#DDD5E8] text-xs font-mono bg-[#FAF8FC] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#6E4F98]"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSaveServerUrl}
+                    className="px-3 py-1.5 rounded-lg bg-[#3D324E] text-white font-bold text-xs hover:bg-[#52446A]"
+                  >
+                    Save
+                  </button>
+                </div>
+                {serverSavedMsg && <div className="text-[10px] text-green-700 font-semibold">{serverSavedMsg}</div>}
               </div>
             )}
 
@@ -197,6 +251,18 @@ export const Login = () => {
                 <div>
                   <strong className="text-[#1D241C]">Client Portal Access:</strong> Client accounts and secure credentials are created exclusively by the Zenv Digital administration upon studio onboarding.
                 </div>
+              </div>
+
+              {/* Server endpoint toggle */}
+              <div className="mt-2 text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowServerConfig(!showServerConfig)}
+                  className="text-[11px] text-[#7A7285] hover:text-[#4A3D60] underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <Settings2 className="w-3 h-3" />
+                  <span>{showServerConfig ? 'Hide Server Settings' : 'Network Server Settings'}</span>
+                </button>
               </div>
             </form>
 

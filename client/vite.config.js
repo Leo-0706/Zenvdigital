@@ -6,6 +6,9 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    watch: {
+      ignored: ['**/android/**', '**/dist/**']
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',

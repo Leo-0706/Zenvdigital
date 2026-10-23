@@ -83,14 +83,27 @@ const allowedOrigins = [
   securityConfig.clientUrl,
   'http://localhost:5173',
   'http://localhost:3000',
-  'http://127.0.0.1:5173'
+  'http://127.0.0.1:5173',
+  'https://localhost',
+  'capacitor://localhost',
+  'http://localhost'
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+      // Allow requests with no origin (e.g. native mobile app, curl, server-to-server)
       if (!origin) return callback(null, true);
+      // Allow Capacitor native mobile origins and local Wi-Fi development
+      if (
+        origin === 'https://localhost' || 
+        origin === 'capacitor://localhost' || 
+        origin.startsWith('http://localhost') || 
+        origin.startsWith('http://127.0.0.1') || 
+        origin.startsWith('http://192.168.')
+      ) {
+        return callback(null, true);
+      }
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
