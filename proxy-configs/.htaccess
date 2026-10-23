@@ -1,0 +1,44 @@
+# ==============================================================================
+# Zenv Digital - Production Apache Hardening & Protection (.htaccess)
+# ==============================================================================
+
+# Disable Directory Browsing
+Options -Indexes
+
+# Follow Symbolic Links
+Options +FollowSymLinks
+
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Block access to hidden files and directories (e.g. .git, .env, .htaccess)
+    RewriteRule "(^|/)\.(?!well-known)" - [F]
+
+    # Block access to backup, log, and config files
+    RewriteRule \.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist|env)$ - [F,L]
+
+    # Block malicious query strings & common exploits
+    RewriteCond %{QUERY_STRING} (eval\(|base64_decode|GLOBALS|_REQUEST) [NC,OR]
+    RewriteCond %{QUERY_STRING} (<|%3C)([^s]*s)+cript.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (UNION|SELECT|INSERT|UPDATE|DELETE|DROP) [NC]
+    RewriteRule ^(.*)$ - [F,L]
+</IfModule>
+
+# Security HTTP Headers
+<IfModule mod_headers.c>
+    Header set X-Frame-Options "DENY"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "geolocation=(), midi=(), sync-xhr=(), microphone=(), camera=(), payment=()"
+</IfModule>
+
+# Prevent Direct Access to Internal Environment Files
+<FilesMatch "^\.(env|git|htaccess|htpasswd)">
+    Require all denied
+</FilesMatch>
+
+# Enforce UTF-8 Character Encoding
+AddDefaultCharset UTF-8

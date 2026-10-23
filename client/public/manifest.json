@@ -1,0 +1,30 @@
+{
+  "name": "Zenv Digital - Studio & Client Portal",
+  "short_name": "Zenv Digital",
+  "description": "Enterprise Video Production, Commercial Review & Shoot Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#04060D",
+  "theme_color": "#04060D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/app_icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
