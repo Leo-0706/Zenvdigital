@@ -1,9 +1,8 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const { createClient } = require('@supabase/supabase-js');
-
 async function testConnection() {
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
+  const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_KEY;
 
   console.log('--- Checking Supabase Cloud Database Connection ---');
   if (!url || !key) {

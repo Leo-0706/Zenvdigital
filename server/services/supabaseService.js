@@ -9,7 +9,7 @@ const fs = require('fs');
 class SupabaseService {
   constructor() {
     this.supabaseUrl = process.env.SUPABASE_URL;
-    this.supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY;
+    this.supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY;
     this.client = null;
 
     if (this.supabaseUrl && this.supabaseKey && this.supabaseUrl.startsWith('http')) {
