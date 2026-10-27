@@ -74,7 +74,11 @@ export const AuthProvider = ({ children }) => {
       setUser(data.user);
       return { success: true, user: data.user };
     } catch (err) {
-      const errPayload = { message: 'Connection failed. Ensure API server is active.' };
+      console.error('[AUTH ERROR]', err);
+      const activeHost = (localStorage.getItem('zenv_api_host') || window.__ZENV_DEFAULT_API_HOST__ || 'http://192.168.29.140:5000').replace(/\/+$/, '');
+      const errPayload = { 
+        message: `Connection failed to ${activeHost}. (${err.message || 'Network timeout or unreachable'}). Tap 'Set Endpoint' to change server URL.` 
+      };
       setAuthError(errPayload);
       return { success: false, data: errPayload };
     }
