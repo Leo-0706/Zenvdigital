@@ -3,6 +3,7 @@ const router = express.Router();
 const { maintenanceManager, authenticateJWT, requireRole } = require('../middleware/securityMiddleware');
 const cronService = require('../services/cronService');
 const googleAuth = require('../config/googleAuth');
+const supabaseService = require('../services/supabaseService');
 
 /**
  * GET /api/system/health
@@ -10,6 +11,7 @@ const googleAuth = require('../config/googleAuth');
  */
 router.get('/health', (req, res) => {
   const memory = process.memoryUsage();
+  const isSupabase = supabaseService.isConfigured();
   return res.status(200).json({
     status: 'HEALTHY',
     system: 'Zenv Digital Enterprise API',
@@ -18,8 +20,9 @@ router.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'development',
     maintenanceMode: maintenanceManager.isEnabled(),
     database: {
-      provider: googleAuth.isConfigured() ? 'Google Sheets & Drive (Live API)' : 'Relational Memory Cache Engine (Ready for Google API)',
-      isLiveConnected: googleAuth.isConfigured()
+      provider: isSupabase ? 'Cloud Supabase PostgreSQL Engine (Live)' : (googleAuth.isConfigured() ? 'Google Sheets & Drive (Live API)' : 'Relational Local SQLite Database Engine'),
+      isLiveConnected: isSupabase || googleAuth.isConfigured(),
+      supabaseConnected: isSupabase
     },
     cron: cronService.getStatus(),
     memory: {
